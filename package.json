@@ -1,5 +1,5 @@
 {
-  "name": "auth-server",
+  "name": "bricz-server",
   "version": "0.0.0",
   "packageManager": "yarn@3.1.1",
   "scripts": {

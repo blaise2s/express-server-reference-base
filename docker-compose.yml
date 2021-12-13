@@ -2,7 +2,7 @@ version: '3.8'
 
 services:
   web:
-    image: auth-server
+    image: bricz-server
     build:
       context: .
       dockerfile: ./Dockerfile

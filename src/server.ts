@@ -24,7 +24,7 @@ const startApolloServer = async (
   await server.start();
   server.applyMiddleware({
     app,
-    path: '/api/auth-server/v1/graphql',
+    path: '/api/bricz-server/v1/graphql',
   });
 
   const port = process.env.PORT || 3000;

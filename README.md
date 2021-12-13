@@ -1,1 +1,1 @@
-# auth-server
+# bricz-server
