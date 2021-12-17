@@ -60,3 +60,6 @@ Thumbs.db
 
 ### Postgres ###
 pgdata
+
+### Uploads ###
+/uploads
