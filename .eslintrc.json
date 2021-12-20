@@ -44,6 +44,8 @@
         "allowSingleExtends": true
       }
     ],
-    "no-underscore-dangle": "off"
+    "no-underscore-dangle": "off",
+    "no-shadow": "off",
+    "@typescript-eslint/no-shadow": ["error"]
   }
 }

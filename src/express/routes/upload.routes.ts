@@ -1,6 +1,7 @@
 import { Express, Request } from 'express';
 import fs from 'fs';
 import multer, { FileFilterCallback } from 'multer';
+import { Upload, UploadAttributes } from '../../sequelize/models/upload.model';
 import prefixRoute from '../utils/prefix-route';
 
 const storagePath = './uploads';
@@ -17,7 +18,8 @@ const fileFilter = (
   file: Express.Multer.File,
   callback: FileFilterCallback
 ) => {
-  if (file.mimetype === 'text/csv') {
+  const { mimetype } = file;
+  if (mimetype === 'text/csv' || mimetype === 'text/tab-separated-values') {
     callback(null, true);
     return;
   }
@@ -26,50 +28,44 @@ const fileFilter = (
 const uploadConfig = multer({
   storage,
   limits: {
-    fileSize: 1024 * 1024 * 10,
+    fileSize: 1024 * 1024 * 500,
   },
   fileFilter,
 });
 
 export const uploadsPath = '/uploads';
 
-let idAssignment = 1;
-interface Upload extends Express.Multer.File {
-  id: number;
-}
-let storedFiles: Upload[] = [];
-
 export default (app: Express, prefix?: string): void => {
   app.post(
     prefixRoute(uploadsPath, prefix),
     uploadConfig.array('files'),
-    (request, response) => {
-      const { files } = request;
-      if (files && files instanceof Array) {
-        files.forEach(file => {
-          storedFiles.push({
-            ...file,
-            id: idAssignment,
-          });
-          idAssignment += 1;
-        });
-        return response.sendStatus(204);
+    async (request, response) => {
+      try {
+        const { files } = request;
+        if (files && files instanceof Array) {
+          await Upload.bulkCreate(files);
+          return response.sendStatus(204);
+        }
+        return response.sendStatus(500);
+      } catch {
+        return response.sendStatus(500);
       }
-      return response.sendStatus(500);
     }
   );
 
-  app.get(prefixRoute(uploadsPath, prefix), (request, response) => {
-    response.json(storedFiles);
+  app.get(prefixRoute(uploadsPath, prefix), async (request, response) => {
+    response.json(await Upload.findAll());
   });
 
-  app.delete(prefixRoute(uploadsPath, prefix), (request, response) => {
-    const uploads: Upload[] = request.body;
+  app.delete(prefixRoute(uploadsPath, prefix), async (request, response) => {
+    const uploads: UploadAttributes[] = request.body;
     const ids = uploads.map(upload => upload.id);
-    storedFiles = storedFiles.filter(storedFile => {
-      fs.unlinkSync(storedFile.path);
-      return !ids.includes(storedFile.id);
+    await Upload.destroy({
+      where: {
+        id: ids,
+      },
     });
+    uploads.forEach(upload => fs.unlinkSync(upload.path));
     response.json({});
   });
 };

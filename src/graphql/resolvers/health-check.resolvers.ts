@@ -1,4 +1,6 @@
-import { HealthCheckResponse } from '../interfaces/health-check.interfaces';
+export interface HealthCheckResponse {
+  msg: string;
+}
 
 export default {
   Query: {
