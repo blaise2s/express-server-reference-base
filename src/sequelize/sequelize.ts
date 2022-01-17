@@ -1,5 +1,7 @@
 import cls from 'cls-hooked';
 import { Options, Sequelize } from 'sequelize';
+import initScriptModel from './models/script.model';
+import initStateModel from './models/state.model';
 import initUploadModel from './models/upload.model';
 
 const briczServerNamespace = cls.createNamespace('briczServerNamespace');
@@ -18,8 +20,8 @@ const defaultOptions: Options = {
 const sequelize = (options: Options) => new Sequelize(options);
 
 export default (
-  options = defaultOptions,
   logging = false,
+  options = defaultOptions,
   createdAt = false,
   updatedAt = false
 ): Sequelize => {
@@ -27,6 +29,9 @@ export default (
     ...options,
     logging,
   });
-  initUploadModel(sequelizeInstance, createdAt, updatedAt);
+  const inits = [initUploadModel, initStateModel, initScriptModel];
+  inits.forEach(init => {
+    init(sequelizeInstance, createdAt, updatedAt);
+  });
   return sequelizeInstance;
 };

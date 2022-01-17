@@ -11,6 +11,8 @@ import { Model, ModelCtor, Sequelize } from 'sequelize';
 import express from './express/express';
 import theResolvers from './graphql/resolvers';
 import theTypeDefs from './graphql/type-defs';
+import { Script } from './sequelize/models/script.model';
+import { State } from './sequelize/models/state.model';
 import { Upload } from './sequelize/models/upload.model';
 import initSequelize from './sequelize/sequelize';
 
@@ -24,10 +26,11 @@ const startApolloServer = async (
   app: Express,
   typeDefs: DocumentNode,
   resolvers: IResolvers,
-  forceSync = false
+  forceSync = false,
+  dbLogging = false
 ): Promise<void> => {
   // Initialize sequelize
-  const sequelize = initSequelize();
+  const sequelize = initSequelize(dbLogging);
 
   // Verify DB connection and sync models
   try {
@@ -36,7 +39,10 @@ const startApolloServer = async (
     console.info('DB Connection has been established successfully.');
 
     // Sync model
-    Upload.sync({ force: forceSync });
+    const models = [Upload, State, Script];
+    models.forEach(model => {
+      model.sync({ force: forceSync });
+    });
     /* eslint-disable-next-line no-console */
     console.info(`Synced tables${forceSync ? ' forcefully.' : '.'}`);
   } catch (error) {
@@ -73,4 +79,4 @@ const startApolloServer = async (
   );
 };
 
-startApolloServer(express, theTypeDefs, theResolvers, false);
+startApolloServer(express, theTypeDefs, theResolvers, false, true);

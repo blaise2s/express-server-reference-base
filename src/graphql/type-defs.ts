@@ -5,6 +5,8 @@ export default gql`
     msg: String!
   }
 
+  scalar JSONObject
+
   type Upload {
     id: Int!
     destination: String!
@@ -17,7 +19,20 @@ export default gql`
     size: Int!
   }
 
-  input DeleteUploadInput {
+  type State {
+    name: String!
+    abv: String!
+    country: String!
+    isstate: Boolean!
+    islower48: Boolean!
+    slug: String!
+    latitude: Float!
+    longitude: Float!
+    population: String!
+    area: Float!
+  }
+
+  input UploadInput {
     id: Int!
     destination: String!
     encoding: String!
@@ -29,13 +44,35 @@ export default gql`
     size: Int!
   }
 
+  type ScriptArg {
+    order: Int!
+    name: String!
+    placeholderText: String!
+  }
+
+  type Script {
+    id: Int!
+    name: String!
+    description: String!
+    numArgs: Int!
+    args: [ScriptArg!]!
+  }
+
   type Query {
     ping: Pong
     uploads: [Upload!]
+    analyze(
+      scriptId: Int!
+      file1Id: Int!
+      file2Id: Int
+      file3Id: Int
+    ): JSONObject
+    states: [State!]
+    scripts: [Script!]
   }
 
   type Mutation {
-    deleteUploads(uploads: [DeleteUploadInput!]!): [Int!]
+    deleteUploads(uploads: [UploadInput!]!): [Int!]
     renameUpload(id: Int!, newName: String!): Upload
   }
 `;
