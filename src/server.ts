@@ -11,9 +11,6 @@ import { Model, ModelCtor, Sequelize } from 'sequelize';
 import express from './express/express';
 import theResolvers from './graphql/resolvers';
 import theTypeDefs from './graphql/type-defs';
-import { Script } from './sequelize/models/script.model';
-import { State } from './sequelize/models/state.model';
-import { Upload } from './sequelize/models/upload.model';
 import initSequelize from './sequelize/sequelize';
 
 export interface Context extends Ctxt {
@@ -25,26 +22,16 @@ export interface Context extends Ctxt {
 const startApolloServer = async (
   app: Express,
   typeDefs: DocumentNode,
-  resolvers: IResolvers,
-  forceSync = false,
-  dbLogging = false
+  resolvers: IResolvers
 ): Promise<void> => {
   // Initialize sequelize
-  const sequelize = initSequelize(dbLogging);
+  const sequelize = initSequelize();
 
   // Verify DB connection and sync models
   try {
     await sequelize.authenticate();
     /* eslint-disable-next-line no-console */
     console.info('DB Connection has been established successfully.');
-
-    // Sync model
-    const models = [Upload, State, Script];
-    models.forEach(model => {
-      model.sync({ force: forceSync });
-    });
-    /* eslint-disable-next-line no-console */
-    console.info(`Synced tables${forceSync ? ' forcefully.' : '.'}`);
   } catch (error) {
     /* eslint-disable-next-line no-console */
     console.error('Unable to connect to the DB:', error);
@@ -79,4 +66,4 @@ const startApolloServer = async (
   );
 };
 
-startApolloServer(express, theTypeDefs, theResolvers, false, true);
+startApolloServer(express, theTypeDefs, theResolvers);

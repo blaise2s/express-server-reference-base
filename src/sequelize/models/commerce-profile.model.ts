@@ -8,53 +8,64 @@ import {
   CreationDateUpdatedDateGenericType,
 } from '../interfaces/model.interfaces';
 
-export interface ScriptArg {
-  name: string;
-  description: string;
-  argKey: string;
-}
-export interface ScriptAttributes extends CreationDateUpdatedDate {
-  id: number;
-  name: string;
-  description: string;
-  args: ScriptArg[];
+export type KeyValueResult<T> = { [key: string]: T };
+export interface CommerceRollup {
+  ecomm: number;
+  pos: number;
+  total: number;
+  numStores: number;
 }
 
-export interface ScriptCreationAttributes
+export enum Analysis {
+  State = 'STATE',
+  Zip = 'ZIP',
+}
+
+export interface Parameters {
+  [key: string]: string;
+}
+
+export interface CommerceProfileAttributes extends CreationDateUpdatedDate {
+  id: number;
+  type: Analysis;
+  parameters: Parameters;
+  result: KeyValueResult<CommerceRollup>;
+}
+
+export interface CommerceProfileCreationAttributes
   extends Optional<
-    ScriptAttributes,
+    CommerceProfileAttributes,
     CreationDateUpdatedDateGenericType<'id'>
   > {}
 
-export class Script
-  extends Model<ScriptAttributes, ScriptCreationAttributes>
-  implements ScriptAttributes
+export class CommerceProfile
+  extends Model<CommerceProfileAttributes, CommerceProfileCreationAttributes>
+  implements CommerceProfileAttributes
 {
   id!: number;
-  name!: string;
-  description!: string;
-  args!: ScriptArg[];
+  type!: Analysis;
+  parameters!: Parameters;
+  result!: KeyValueResult<CommerceRollup>;
   recordCreationDate!: Date;
   recordUpdatedDate!: Date;
 }
 
-export default (sequelize: Sequelize): typeof Script => {
-  Script.init(
+export default (sequelize: Sequelize): typeof CommerceProfile => {
+  CommerceProfile.init(
     {
       id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
       },
-      name: {
-        type: DataTypes.STRING(100),
+      type: {
+        type: DataTypes.ENUM('STATE', 'ZIP'),
         allowNull: false,
       },
-      description: {
-        type: DataTypes.STRING(500),
-        allowNull: false,
+      parameters: {
+        type: DataTypes.JSONB,
       },
-      args: {
+      result: {
         type: DataTypes.JSONB,
         allowNull: false,
       },
@@ -72,12 +83,12 @@ export default (sequelize: Sequelize): typeof Script => {
       },
     },
     {
-      modelName: 'Script',
-      tableName: 'scripts',
+      modelName: 'CommerceProfile',
+      tableName: 'commerce_profile',
       sequelize,
       createdAt: RECORD_CREATION_DATE_FIELD,
       updatedAt: RECORD_UPDATED_DATE_FIELD,
     }
   );
-  return Script;
+  return CommerceProfile;
 };

@@ -1,11 +1,19 @@
-import { DataTypes, Model, Sequelize } from 'sequelize';
+import { DataTypes, Model, Optional, Sequelize } from 'sequelize';
+import {
+  RECORD_CREATION_DATE_FIELD,
+  RECORD_UPDATED_DATE_FIELD,
+} from '../constants/table.constants';
+import {
+  CreationDateUpdatedDate,
+  CreationDateUpdatedDateType,
+} from '../interfaces/model.interfaces';
 
-export interface StateAttributes {
+export interface StateAttributes extends CreationDateUpdatedDate {
   name: string;
   abv: string;
   country: string;
-  isstate: boolean;
-  islower48: boolean;
+  isState: boolean;
+  isLower48: boolean;
   slug: string;
   latitude: number;
   longitude: number;
@@ -13,24 +21,28 @@ export interface StateAttributes {
   area: number;
 }
 
-export class State extends Model<StateAttributes> implements StateAttributes {
+export interface StateCreationAttributes
+  extends Optional<StateAttributes, CreationDateUpdatedDateType> {}
+
+export class State
+  extends Model<StateAttributes, StateAttributes>
+  implements StateAttributes
+{
   name!: string;
   abv!: string;
   country!: string;
-  isstate!: boolean;
-  islower48!: boolean;
+  isState!: boolean;
+  isLower48!: boolean;
   slug!: string;
   latitude!: number;
   longitude!: number;
   population!: number;
   area!: number;
+  recordCreationDate!: Date;
+  recordUpdatedDate!: Date;
 }
 
-export default (
-  sequelize: Sequelize,
-  createdAt = false,
-  updatedAt = false
-): void => {
+export default (sequelize: Sequelize): typeof State => {
   State.init(
     {
       name: {
@@ -47,11 +59,13 @@ export default (
         allowNull: false,
         primaryKey: true,
       },
-      isstate: {
+      isState: {
+        field: 'is_state',
         type: DataTypes.BOOLEAN,
         allowNull: false,
       },
-      islower48: {
+      isLower48: {
+        field: 'is_lower_48',
         type: DataTypes.BOOLEAN,
         allowNull: false,
       },
@@ -75,12 +89,26 @@ export default (
         type: DataTypes.FLOAT,
         allowNull: false,
       },
+      recordCreationDate: {
+        field: RECORD_CREATION_DATE_FIELD,
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize.fn('NOW'),
+      },
+      recordUpdatedDate: {
+        field: RECORD_UPDATED_DATE_FIELD,
+        type: DataTypes.DATE,
+        allowNull: false,
+        defaultValue: sequelize.fn('NOW'),
+      },
     },
     {
+      modelName: 'State',
       tableName: 'states',
       sequelize,
-      createdAt,
-      updatedAt,
+      createdAt: RECORD_CREATION_DATE_FIELD,
+      updatedAt: RECORD_UPDATED_DATE_FIELD,
     }
   );
+  return State;
 };

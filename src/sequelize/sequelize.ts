@@ -1,5 +1,7 @@
 import cls from 'cls-hooked';
 import { Options, Sequelize } from 'sequelize';
+import config from './config/config';
+import initCommerceProfileModel from './models/commerce-profile.model';
 import initScriptModel from './models/script.model';
 import initStateModel from './models/state.model';
 import initUploadModel from './models/upload.model';
@@ -7,31 +9,27 @@ import initUploadModel from './models/upload.model';
 const briczServerNamespace = cls.createNamespace('briczServerNamespace');
 Sequelize.useCLS(briczServerNamespace);
 
-const defaultOptions: Options = {
-  database: 'bricz',
-  username: 'postgres',
-  password: 'postgres',
-  host: 'localhost',
-  port: 5432,
-  dialect: 'postgres',
-  logging: false,
+export const sequelize = (): Sequelize => {
+  const env = process.env.NODE_ENV || 'development';
+  if (env === 'development' || env === 'test' || env === 'production') {
+    const options: Options = config[env];
+    return new Sequelize(options);
+  }
+  throw new Error(
+    `Sequelize config does not exist for environment ${process.env.NODE_ENV}.`
+  );
 };
 
-const sequelize = (options: Options) => new Sequelize(options);
-
-export default (
-  logging = false,
-  options = defaultOptions,
-  createdAt = false,
-  updatedAt = false
-): Sequelize => {
-  const sequelizeInstance = sequelize({
-    ...options,
-    logging,
-  });
-  const inits = [initUploadModel, initStateModel, initScriptModel];
+export default (): Sequelize => {
+  const sequelizeInstance = sequelize();
+  const inits = [
+    initUploadModel,
+    initStateModel,
+    initScriptModel,
+    initCommerceProfileModel,
+  ];
   inits.forEach(init => {
-    init(sequelizeInstance, createdAt, updatedAt);
+    init(sequelizeInstance);
   });
   return sequelizeInstance;
 };
