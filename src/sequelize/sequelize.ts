@@ -1,10 +1,7 @@
 import cls from 'cls-hooked';
 import { Options, Sequelize } from 'sequelize';
 import config from './config/config';
-import initCommerceProfileModel from './models/commerce-profile.model';
-import initScriptModel from './models/script.model';
-import initStateModel from './models/state.model';
-import initUploadModel from './models/upload.model';
+import initModels from './models';
 
 const briczServerNamespace = cls.createNamespace('briczServerNamespace');
 Sequelize.useCLS(briczServerNamespace);
@@ -22,14 +19,6 @@ export const sequelize = (): Sequelize => {
 
 export default (): Sequelize => {
   const sequelizeInstance = sequelize();
-  const inits = [
-    initUploadModel,
-    initStateModel,
-    initScriptModel,
-    initCommerceProfileModel,
-  ];
-  inits.forEach(init => {
-    init(sequelizeInstance);
-  });
+  initModels(sequelizeInstance);
   return sequelizeInstance;
 };

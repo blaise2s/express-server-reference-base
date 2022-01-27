@@ -5,7 +5,7 @@ import {
 } from '../constants/table.constants';
 import { Migration } from './umzug';
 
-const TABLE_NAME = 'uploads';
+const TABLE_NAME = 'point_of_sale';
 
 export const up: Migration = async ({ context: sequelize }) => {
   await sequelize.getQueryInterface().createTable(TABLE_NAME, {
@@ -14,41 +14,37 @@ export const up: Migration = async ({ context: sequelize }) => {
       autoIncrement: true,
       primaryKey: true,
     },
-    destination: {
-      type: DataTypes.STRING(500),
-      allowNull: false,
+    orderId: {
+      field: 'order_id',
+      type: DataTypes.STRING,
     },
-    encoding: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
+    customerId: {
+      field: 'customer_id',
+      type: DataTypes.STRING,
     },
-    fieldname: {
-      field: 'field_name',
-      type: DataTypes.STRING(100),
-      allowNull: false,
+    date: {
+      type: DataTypes.DATE,
     },
-    filename: {
-      field: 'file_name',
-      type: DataTypes.STRING(500),
-      allowNull: false,
+    sku: {
+      type: DataTypes.STRING,
     },
-    mimetype: {
-      field: 'mime_type',
-      type: DataTypes.STRING(50),
-      allowNull: false,
+    quantity: {
+      type: DataTypes.DECIMAL,
     },
-    originalname: {
-      field: 'original_name',
-      type: DataTypes.STRING(500),
-      allowNull: false,
+    city: {
+      type: DataTypes.STRING,
     },
-    path: {
-      type: DataTypes.STRING(1000),
-      allowNull: false,
+    state: {
+      type: DataTypes.STRING,
     },
-    size: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+    country: {
+      type: DataTypes.STRING,
+    },
+    zip: {
+      type: DataTypes.STRING(12),
+    },
+    store: {
+      type: DataTypes.STRING,
     },
     recordCreationDate: {
       field: RECORD_CREATION_DATE_FIELD,

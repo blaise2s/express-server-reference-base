@@ -5,7 +5,7 @@ import {
 } from '../constants/table.constants';
 import { Migration } from './umzug';
 
-const TABLE_NAME = 'scripts';
+const TABLE_NAME = 'ecommerce';
 
 export const up: Migration = async ({ context: sequelize }) => {
   await sequelize.getQueryInterface().createTable(TABLE_NAME, {
@@ -14,17 +14,37 @@ export const up: Migration = async ({ context: sequelize }) => {
       autoIncrement: true,
       primaryKey: true,
     },
-    name: {
-      type: DataTypes.STRING(100),
-      allowNull: false,
+    orderId: {
+      field: 'order_id',
+      type: DataTypes.STRING,
     },
-    description: {
-      type: DataTypes.STRING(500),
-      allowNull: false,
+    customerId: {
+      field: 'customer_id',
+      type: DataTypes.STRING,
     },
-    args: {
-      type: DataTypes.JSONB,
-      allowNull: false,
+    date: {
+      type: DataTypes.DATE,
+    },
+    sku: {
+      type: DataTypes.STRING,
+    },
+    quantity: {
+      type: DataTypes.DECIMAL,
+    },
+    city: {
+      type: DataTypes.STRING,
+    },
+    state: {
+      type: DataTypes.STRING,
+    },
+    country: {
+      type: DataTypes.STRING,
+    },
+    zip: {
+      type: DataTypes.STRING(12),
+    },
+    fulfillment: {
+      type: DataTypes.STRING,
     },
     recordCreationDate: {
       field: RECORD_CREATION_DATE_FIELD,

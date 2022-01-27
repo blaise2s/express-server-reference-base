@@ -5,53 +5,44 @@ import {
 } from '../constants/table.constants';
 import { Migration } from './umzug';
 
-const TABLE_NAME = 'states';
+const TABLE_NAME = 'location';
 
 export const up: Migration = async ({ context: sequelize }) => {
   await sequelize.getQueryInterface().createTable(TABLE_NAME, {
+    id: {
+      type: DataTypes.INTEGER,
+      autoIncrement: true,
+      primaryKey: true,
+    },
     name: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
-    },
-    abv: {
-      type: DataTypes.CHAR(2),
-      allowNull: false,
-      primaryKey: true,
-    },
-    country: {
-      type: DataTypes.CHAR(2),
-      allowNull: false,
-      primaryKey: true,
-    },
-    isState: {
-      field: 'is_state',
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-    },
-    isLower48: {
-      field: 'is_lower_48',
-      type: DataTypes.BOOLEAN,
-      allowNull: false,
-    },
-    slug: {
-      type: DataTypes.STRING(50),
-      allowNull: false,
+      type: DataTypes.STRING,
     },
     latitude: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
+      type: DataTypes.DECIMAL,
     },
     longitude: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
+      type: DataTypes.DECIMAL,
     },
-    population: {
-      type: DataTypes.BIGINT,
-      allowNull: false,
+    address: {
+      type: DataTypes.STRING,
     },
-    area: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
+    city: {
+      type: DataTypes.STRING,
+    },
+    state: {
+      type: DataTypes.STRING,
+    },
+    country: {
+      type: DataTypes.STRING,
+    },
+    zip: {
+      type: DataTypes.STRING(12),
+    },
+    phone: {
+      type: DataTypes.STRING(15),
+    },
+    type: {
+      type: DataTypes.STRING,
     },
     recordCreationDate: {
       field: RECORD_CREATION_DATE_FIELD,

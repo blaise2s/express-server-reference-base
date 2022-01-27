@@ -8,44 +8,40 @@ import {
   CreationDateUpdatedDateGenericType,
 } from '../interfaces/model.interfaces';
 
-export type KeyValueResult<T> = { [key: string]: T };
-export interface CommerceRollup {
-  ecomm: number;
-  pos: number;
-  total: number;
-  numStores: number;
-}
+export type KeyValueResult<R> = { [key: string]: R };
 
 export enum Analysis {
   State = 'STATE',
-  Zip = 'ZIP',
+  Zip = 'ZIP3',
 }
 
 export interface Parameters {
   [key: string]: string;
 }
-
-export interface CommerceProfileAttributes extends CreationDateUpdatedDate {
+export interface CommerceProfileAttributes<R> extends CreationDateUpdatedDate {
   id: number;
   type: Analysis;
-  parameters: Parameters;
-  result: KeyValueResult<CommerceRollup>;
+  parameters: Parameters | null;
+  result: KeyValueResult<R>;
 }
 
-export interface CommerceProfileCreationAttributes
+export interface CommerceProfileCreationAttributes<R>
   extends Optional<
-    CommerceProfileAttributes,
+    CommerceProfileAttributes<R>,
     CreationDateUpdatedDateGenericType<'id'>
   > {}
 
-export class CommerceProfile
-  extends Model<CommerceProfileAttributes, CommerceProfileCreationAttributes>
-  implements CommerceProfileAttributes
+export class CommerceProfile<R>
+  extends Model<
+    CommerceProfileAttributes<R>,
+    CommerceProfileCreationAttributes<R>
+  >
+  implements CommerceProfileAttributes<R>
 {
   id!: number;
   type!: Analysis;
-  parameters!: Parameters;
-  result!: KeyValueResult<CommerceRollup>;
+  parameters!: Parameters | null;
+  result!: KeyValueResult<R>;
   recordCreationDate!: Date;
   recordUpdatedDate!: Date;
 }

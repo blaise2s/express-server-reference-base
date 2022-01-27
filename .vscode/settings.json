@@ -13,5 +13,5 @@
   "prettier.prettierPath": ".yarn/sdks/prettier/index.js",
   "typescript.tsdk": ".yarn/sdks/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
-  "cSpell.words": ["bricz", "ecomm", "rollup"]
+  "cSpell.words": ["bricz", "ecomm", "ecommerce", "rollup"]
 }
