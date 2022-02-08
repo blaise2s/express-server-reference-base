@@ -24,7 +24,7 @@ const startApolloServer = async (
   typeDefs: DocumentNode,
   resolvers: IResolvers
 ): Promise<void> => {
-  // Initialize sequelize
+  // Init sequelize
   const sequelize = initSequelize();
 
   // Verify DB connection and sync models

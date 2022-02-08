@@ -5,7 +5,7 @@ import {
 } from '../constants/table.constants';
 import { Migration } from './umzug';
 
-const TABLE_NAME = 'point_of_sale';
+const TABLE_NAME = 'ecommerce_order_details';
 
 export const up: Migration = async ({ context: sequelize }) => {
   await sequelize.getQueryInterface().createTable(TABLE_NAME, {
@@ -16,35 +16,17 @@ export const up: Migration = async ({ context: sequelize }) => {
     },
     orderId: {
       field: 'order_id',
-      type: DataTypes.STRING,
-    },
-    customerId: {
-      field: 'customer_id',
-      type: DataTypes.STRING,
-    },
-    date: {
-      type: DataTypes.DATE,
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
     sku: {
-      type: DataTypes.STRING,
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
     quantity: {
       type: DataTypes.DECIMAL,
     },
-    city: {
-      type: DataTypes.STRING,
-    },
-    state: {
-      type: DataTypes.STRING,
-    },
-    country: {
-      type: DataTypes.STRING,
-    },
-    zipCode: {
-      field: 'zip_code',
-      type: DataTypes.STRING(25),
-    },
-    store: {
+    warehouse: {
       type: DataTypes.STRING,
     },
     recordCreationDate: {

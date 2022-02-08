@@ -5,7 +5,7 @@ import {
 } from '../constants/table.constants';
 import { Migration } from './umzug';
 
-const TABLE_NAME = 'point_of_sale';
+const TABLE_NAME = 'store_weekly_sales';
 
 export const up: Migration = async ({ context: sequelize }) => {
   await sequelize.getQueryInterface().createTable(TABLE_NAME, {
@@ -14,38 +14,24 @@ export const up: Migration = async ({ context: sequelize }) => {
       autoIncrement: true,
       primaryKey: true,
     },
-    orderId: {
-      field: 'order_id',
-      type: DataTypes.STRING,
+    locationId: {
+      field: 'location_id',
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
-    customerId: {
-      field: 'customer_id',
-      type: DataTypes.STRING,
+    itemId: {
+      field: 'item_id',
+      type: DataTypes.INTEGER,
+      allowNull: false,
     },
     date: {
       type: DataTypes.DATE,
     },
-    sku: {
-      type: DataTypes.STRING,
-    },
     quantity: {
       type: DataTypes.DECIMAL,
     },
-    city: {
-      type: DataTypes.STRING,
-    },
-    state: {
-      type: DataTypes.STRING,
-    },
-    country: {
-      type: DataTypes.STRING,
-    },
-    zipCode: {
-      field: 'zip_code',
-      type: DataTypes.STRING(25),
-    },
-    store: {
-      type: DataTypes.STRING,
+    week: {
+      type: DataTypes.INTEGER,
     },
     recordCreationDate: {
       field: RECORD_CREATION_DATE_FIELD,

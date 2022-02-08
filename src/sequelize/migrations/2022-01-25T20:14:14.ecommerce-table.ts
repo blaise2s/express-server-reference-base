@@ -40,8 +40,9 @@ export const up: Migration = async ({ context: sequelize }) => {
     country: {
       type: DataTypes.STRING,
     },
-    zip: {
-      type: DataTypes.STRING(12),
+    zipCode: {
+      field: 'zip_code',
+      type: DataTypes.STRING(25),
     },
     fulfillment: {
       type: DataTypes.STRING,

@@ -18,7 +18,7 @@ export interface PointOfSaleAttributes extends CreationDateUpdatedDate {
   city: string | null;
   state: string | null;
   country: string | null;
-  zip: string | null;
+  zipCode: string | null;
   store: string | null;
 }
 
@@ -41,7 +41,7 @@ export class PointOfSale
   city!: string | null;
   state!: string | null;
   country!: string | null;
-  zip!: string | null;
+  zipCode!: string | null;
   store!: string | null;
   recordCreationDate!: Date;
   recordUpdatedDate!: Date;
@@ -81,8 +81,9 @@ export default (sequelize: Sequelize): typeof PointOfSale => {
       country: {
         type: DataTypes.STRING,
       },
-      zip: {
-        type: DataTypes.STRING(12),
+      zipCode: {
+        field: 'zip_code',
+        type: DataTypes.STRING(25),
       },
       store: {
         type: DataTypes.STRING,

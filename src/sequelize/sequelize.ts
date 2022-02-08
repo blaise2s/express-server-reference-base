@@ -1,5 +1,5 @@
 import cls from 'cls-hooked';
-import { Options, Sequelize } from 'sequelize';
+import { Model, Options, Sequelize } from 'sequelize';
 import config from './config/config';
 import initModels from './models';
 
@@ -17,8 +17,10 @@ export const sequelize = (): Sequelize => {
   );
 };
 
-export default (): Sequelize => {
+export default (
+  modelInitializers?: ((sequelize: Sequelize) => typeof Model)[]
+): Sequelize => {
   const sequelizeInstance = sequelize();
-  initModels(sequelizeInstance);
+  initModels(sequelizeInstance, modelInitializers);
   return sequelizeInstance;
 };

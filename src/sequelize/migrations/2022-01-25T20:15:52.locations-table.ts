@@ -5,7 +5,7 @@ import {
 } from '../constants/table.constants';
 import { Migration } from './umzug';
 
-const TABLE_NAME = 'point_of_sale';
+const TABLE_NAME = 'locations';
 
 export const up: Migration = async ({ context: sequelize }) => {
   await sequelize.getQueryInterface().createTable(TABLE_NAME, {
@@ -14,38 +14,50 @@ export const up: Migration = async ({ context: sequelize }) => {
       autoIncrement: true,
       primaryKey: true,
     },
-    orderId: {
-      field: 'order_id',
+    facilityId: {
+      field: 'facility_id',
       type: DataTypes.STRING,
     },
-    customerId: {
-      field: 'customer_id',
+    address1: {
+      field: 'address_1',
       type: DataTypes.STRING,
     },
-    date: {
-      type: DataTypes.DATE,
-    },
-    sku: {
+    address2: {
+      field: 'address_2',
       type: DataTypes.STRING,
-    },
-    quantity: {
-      type: DataTypes.DECIMAL,
     },
     city: {
       type: DataTypes.STRING,
     },
-    state: {
-      type: DataTypes.STRING,
-    },
-    country: {
+    stateProvence: {
+      field: 'state_prov',
       type: DataTypes.STRING,
     },
     zipCode: {
       field: 'zip_code',
-      type: DataTypes.STRING(25),
+      type: DataTypes.STRING(12),
     },
-    store: {
-      type: DataTypes.STRING,
+    countryCode: {
+      field: 'country_code',
+      type: DataTypes.STRING(10),
+    },
+    longitude: {
+      type: DataTypes.DECIMAL,
+    },
+    latitude: {
+      type: DataTypes.DECIMAL,
+    },
+    facilityType: {
+      field: 'facility_type',
+      type: DataTypes.ENUM('STORE', 'OUTLET', 'DC', 'WAREHOUSE', 'OTHER'),
+    },
+    sellableSquareFt: {
+      type: DataTypes.INTEGER,
+      field: 'sellable_sq_ft',
+    },
+    storageSquareFt: {
+      type: DataTypes.INTEGER,
+      field: 'storage_sq_ft',
     },
     recordCreationDate: {
       field: RECORD_CREATION_DATE_FIELD,

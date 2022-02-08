@@ -1,7 +1,8 @@
-dist
+dist/
 coverage
-.husky
-node_modules
-.yarn
+.husky/
+node_modules/
+.yarn/
 yarn.lock
-.vscode
+.vscode/
+src/express/json/

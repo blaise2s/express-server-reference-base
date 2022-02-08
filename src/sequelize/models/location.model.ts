@@ -8,18 +8,35 @@ import {
   CreationDateUpdatedDateGenericType,
 } from '../interfaces/model.interfaces';
 
+export enum FacilityType {
+  STORE = 'STORE',
+  OUTLET = 'OUTLET',
+  DC = 'DC',
+  WAREHOUSE = 'WAREHOUSE',
+  OTHER = 'OTHER',
+}
+export const FacilityTypeValues = [
+  'STORE',
+  'OUTLET',
+  'DC',
+  'WAREHOUSE',
+  'OTHER',
+];
+
 export interface LocationAttributes extends CreationDateUpdatedDate {
   id: number;
-  name: string | null;
-  latitude: number | null;
-  longitude: number | null;
-  address: string | null;
+  facilityId: string | null;
+  address1: string | null;
+  address2: string | null;
   city: string | null;
-  state: string | null;
-  country: string | null;
-  zip: string | null;
-  phone: string | null;
-  type: string | null;
+  stateProvence: string | null;
+  zipCode: string | null;
+  countryCode: string | null;
+  longitude: number | null;
+  latitude: number | null;
+  facilityType: FacilityType | null;
+  sellableSquareFt: number | null;
+  storageSquareFt: number | null;
 }
 
 export interface LocationCreationAttributes
@@ -33,16 +50,18 @@ export class Location
   implements LocationAttributes
 {
   id!: number;
-  name!: string | null;
-  latitude!: number | null;
-  longitude!: number | null;
-  address!: string | null;
+  facilityId!: string | null;
+  address1!: string | null;
+  address2!: string | null;
   city!: string | null;
-  state!: string | null;
-  country!: string | null;
-  zip!: string | null;
-  phone!: string | null;
-  type!: string | null;
+  stateProvence!: string | null;
+  zipCode!: string | null;
+  countryCode!: string | null;
+  longitude!: number | null;
+  latitude!: number | null;
+  facilityType!: FacilityType | null;
+  sellableSquareFt!: number | null;
+  storageSquareFt!: number | null;
   recordCreationDate!: Date;
   recordUpdatedDate!: Date;
 }
@@ -55,35 +74,50 @@ export default (sequelize: Sequelize): typeof Location => {
         autoIncrement: true,
         primaryKey: true,
       },
-      name: {
+      facilityId: {
+        field: 'facility_id',
         type: DataTypes.STRING,
       },
-      latitude: {
-        type: DataTypes.DECIMAL,
+      address1: {
+        field: 'address_1',
+        type: DataTypes.STRING,
       },
-      longitude: {
-        type: DataTypes.DECIMAL,
-      },
-      address: {
+      address2: {
+        field: 'address_2',
         type: DataTypes.STRING,
       },
       city: {
         type: DataTypes.STRING,
       },
-      state: {
+      stateProvence: {
+        field: 'state_prov',
         type: DataTypes.STRING,
       },
-      country: {
-        type: DataTypes.STRING,
-      },
-      zip: {
+      zipCode: {
+        field: 'zip_code',
         type: DataTypes.STRING(12),
       },
-      phone: {
-        type: DataTypes.STRING(15),
+      countryCode: {
+        field: 'country_code',
+        type: DataTypes.STRING(10),
       },
-      type: {
-        type: DataTypes.STRING,
+      longitude: {
+        type: DataTypes.DECIMAL,
+      },
+      latitude: {
+        type: DataTypes.DECIMAL,
+      },
+      facilityType: {
+        field: 'facility_type',
+        type: DataTypes.ENUM('STORE', 'OUTLET', 'DC', 'WAREHOUSE', 'OTHER'),
+      },
+      sellableSquareFt: {
+        type: DataTypes.INTEGER,
+        field: 'sellable_sq_ft',
+      },
+      storageSquareFt: {
+        type: DataTypes.INTEGER,
+        field: 'storage_sq_ft',
       },
       recordCreationDate: {
         field: RECORD_CREATION_DATE_FIELD,
@@ -100,7 +134,7 @@ export default (sequelize: Sequelize): typeof Location => {
     },
     {
       modelName: 'Location',
-      tableName: 'location',
+      tableName: 'locations',
       sequelize,
       createdAt: RECORD_CREATION_DATE_FIELD,
       updatedAt: RECORD_UPDATED_DATE_FIELD,

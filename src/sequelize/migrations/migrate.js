@@ -5,6 +5,4 @@
 require('ts-node/register');
 require('dotenv').config();
 
-console.log(process.env.POSTGRES_HOST);
-
 require('./umzug').migrator.runAsCLI();

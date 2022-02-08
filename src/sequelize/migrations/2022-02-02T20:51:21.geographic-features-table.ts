@@ -5,44 +5,38 @@ import {
 } from '../constants/table.constants';
 import { Migration } from './umzug';
 
-const TABLE_NAME = 'location';
+const TABLE_NAME = 'geographic_features';
 
 export const up: Migration = async ({ context: sequelize }) => {
   await sequelize.getQueryInterface().createTable(TABLE_NAME, {
     id: {
-      type: DataTypes.INTEGER,
-      autoIncrement: true,
+      type: DataTypes.STRING,
       primaryKey: true,
     },
-    name: {
-      type: DataTypes.STRING,
+    geometryType: {
+      field: 'geometry_type',
+      type: DataTypes.ENUM(
+        'Point',
+        'MultiPoint',
+        'LineString',
+        'MultiLineString',
+        'Polygon',
+        'MultiPolygon',
+        'GeometryCollection'
+      ),
+      allowNull: false,
     },
-    latitude: {
-      type: DataTypes.DECIMAL,
+    shapeType: {
+      field: 'shape_type',
+      type: DataTypes.ENUM('STATE', 'ZIP3'),
+      allowNull: false,
     },
-    longitude: {
-      type: DataTypes.DECIMAL,
+    coordinates: {
+      type: DataTypes.JSONB,
+      allowNull: false,
     },
-    address: {
-      type: DataTypes.STRING,
-    },
-    city: {
-      type: DataTypes.STRING,
-    },
-    state: {
-      type: DataTypes.STRING,
-    },
-    country: {
-      type: DataTypes.STRING,
-    },
-    zip: {
-      type: DataTypes.STRING(12),
-    },
-    phone: {
-      type: DataTypes.STRING(15),
-    },
-    type: {
-      type: DataTypes.STRING,
+    properties: {
+      type: DataTypes.JSONB,
     },
     recordCreationDate: {
       field: RECORD_CREATION_DATE_FIELD,

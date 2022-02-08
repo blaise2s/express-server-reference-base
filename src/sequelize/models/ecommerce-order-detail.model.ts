@@ -8,62 +8,59 @@ import {
   CreationDateUpdatedDateGenericType,
 } from '../interfaces/model.interfaces';
 
-export type KeyValueResult<R> = { [key: string]: R };
-
-export enum Analysis {
-  State = 'STATE',
-  Zip3 = 'ZIP3',
-}
-
-export interface Parameters {
-  [key: string]: string;
-}
-export interface CommerceProfileAttributes<R> extends CreationDateUpdatedDate {
+export interface EcommerceOrderDetailAttributes
+  extends CreationDateUpdatedDate {
   id: number;
-  type: Analysis;
-  parameters: Parameters | null;
-  result: KeyValueResult<R>;
+  orderId: number;
+  sku: number;
+  quantity: number | null;
+  warehouse: string | null;
 }
 
-export interface CommerceProfileCreationAttributes<R>
+export interface EcommerceOrderDetailCreationAttributes
   extends Optional<
-    CommerceProfileAttributes<R>,
+    EcommerceOrderDetailAttributes,
     CreationDateUpdatedDateGenericType<'id'>
   > {}
 
-export class CommerceProfile<R>
+export class EcommerceOrderDetail
   extends Model<
-    CommerceProfileAttributes<R>,
-    CommerceProfileCreationAttributes<R>
+    EcommerceOrderDetailAttributes,
+    EcommerceOrderDetailCreationAttributes
   >
-  implements CommerceProfileAttributes<R>
+  implements EcommerceOrderDetailAttributes
 {
   id!: number;
-  type!: Analysis;
-  parameters!: Parameters | null;
-  result!: KeyValueResult<R>;
+  orderId!: number;
+  sku!: number;
+  quantity!: number | null;
+  warehouse!: string | null;
   recordCreationDate!: Date;
   recordUpdatedDate!: Date;
 }
 
-export default (sequelize: Sequelize): typeof CommerceProfile => {
-  CommerceProfile.init(
+export default (sequelize: Sequelize): typeof EcommerceOrderDetail => {
+  EcommerceOrderDetail.init(
     {
       id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
       },
-      type: {
-        type: DataTypes.ENUM('STATE', 'ZIP3'),
+      orderId: {
+        field: 'order_id',
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
-      parameters: {
-        type: DataTypes.JSONB,
-      },
-      result: {
-        type: DataTypes.JSONB,
+      sku: {
+        type: DataTypes.INTEGER,
         allowNull: false,
+      },
+      quantity: {
+        type: DataTypes.DECIMAL,
+      },
+      warehouse: {
+        type: DataTypes.STRING,
       },
       recordCreationDate: {
         field: RECORD_CREATION_DATE_FIELD,
@@ -79,12 +76,12 @@ export default (sequelize: Sequelize): typeof CommerceProfile => {
       },
     },
     {
-      modelName: 'CommerceProfile',
-      tableName: 'commerce_profiles',
+      modelName: 'EcommerceOrderDetail',
+      tableName: 'ecommerce_order_details',
       sequelize,
       createdAt: RECORD_CREATION_DATE_FIELD,
       updatedAt: RECORD_UPDATED_DATE_FIELD,
     }
   );
-  return CommerceProfile;
+  return EcommerceOrderDetail;
 };

@@ -8,62 +8,61 @@ import {
   CreationDateUpdatedDateGenericType,
 } from '../interfaces/model.interfaces';
 
-export type KeyValueResult<R> = { [key: string]: R };
-
-export enum Analysis {
-  State = 'STATE',
-  Zip3 = 'ZIP3',
-}
-
-export interface Parameters {
-  [key: string]: string;
-}
-export interface CommerceProfileAttributes<R> extends CreationDateUpdatedDate {
+export interface StoreWeeklySaleAttributes extends CreationDateUpdatedDate {
   id: number;
-  type: Analysis;
-  parameters: Parameters | null;
-  result: KeyValueResult<R>;
+  locationId: number;
+  itemId: number;
+  date: Date | null;
+  quantity: number | null;
+  week: number | null;
 }
 
-export interface CommerceProfileCreationAttributes<R>
+export interface StoreWeeklySaleCreationAttributes
   extends Optional<
-    CommerceProfileAttributes<R>,
+    StoreWeeklySaleAttributes,
     CreationDateUpdatedDateGenericType<'id'>
   > {}
 
-export class CommerceProfile<R>
-  extends Model<
-    CommerceProfileAttributes<R>,
-    CommerceProfileCreationAttributes<R>
-  >
-  implements CommerceProfileAttributes<R>
+export class StoreWeeklySale
+  extends Model<StoreWeeklySaleAttributes, StoreWeeklySaleCreationAttributes>
+  implements StoreWeeklySaleAttributes
 {
   id!: number;
-  type!: Analysis;
-  parameters!: Parameters | null;
-  result!: KeyValueResult<R>;
+  locationId!: number;
+  itemId!: number;
+  date!: Date | null;
+  quantity!: number | null;
+  week!: number | null;
   recordCreationDate!: Date;
   recordUpdatedDate!: Date;
 }
 
-export default (sequelize: Sequelize): typeof CommerceProfile => {
-  CommerceProfile.init(
+export default (sequelize: Sequelize): typeof StoreWeeklySale => {
+  StoreWeeklySale.init(
     {
       id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
       },
-      type: {
-        type: DataTypes.ENUM('STATE', 'ZIP3'),
+      locationId: {
+        field: 'location_id',
+        type: DataTypes.INTEGER,
         allowNull: false,
       },
-      parameters: {
-        type: DataTypes.JSONB,
-      },
-      result: {
-        type: DataTypes.JSONB,
+      itemId: {
+        field: 'item_id',
+        type: DataTypes.INTEGER,
         allowNull: false,
+      },
+      date: {
+        type: DataTypes.DATE,
+      },
+      quantity: {
+        type: DataTypes.DECIMAL,
+      },
+      week: {
+        type: DataTypes.INTEGER,
       },
       recordCreationDate: {
         field: RECORD_CREATION_DATE_FIELD,
@@ -79,12 +78,12 @@ export default (sequelize: Sequelize): typeof CommerceProfile => {
       },
     },
     {
-      modelName: 'CommerceProfile',
-      tableName: 'commerce_profiles',
+      modelName: 'StoreWeeklySale',
+      tableName: 'store_weekly_sales',
       sequelize,
       createdAt: RECORD_CREATION_DATE_FIELD,
       updatedAt: RECORD_UPDATED_DATE_FIELD,
     }
   );
-  return CommerceProfile;
+  return StoreWeeklySale;
 };

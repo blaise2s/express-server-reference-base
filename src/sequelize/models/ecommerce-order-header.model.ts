@@ -8,47 +8,51 @@ import {
   CreationDateUpdatedDateGenericType,
 } from '../interfaces/model.interfaces';
 
-export interface ECommerceAttributes extends CreationDateUpdatedDate {
+export interface EcommerceOrderHeaderAttributes
+  extends CreationDateUpdatedDate {
   id: number;
   orderId: string | null;
-  customerId: string | null;
+  customerOrderId: string | null;
   date: Date | null;
-  sku: string | null;
-  quantity: number | null;
   city: string | null;
   state: string | null;
   country: string | null;
   zipCode: string | null;
-  fulfillment: string | null;
+  totalQuantity: number | null;
+  type: string | null;
+  warehouse: string | null;
 }
 
-export interface ECommerceCreationAttributes
+export interface EcommerceOrderHeaderCreationAttributes
   extends Optional<
-    ECommerceAttributes,
+    EcommerceOrderHeaderAttributes,
     CreationDateUpdatedDateGenericType<'id'>
   > {}
 
-export class ECommerce
-  extends Model<ECommerceAttributes, ECommerceCreationAttributes>
-  implements ECommerceAttributes
+export class EcommerceOrderHeader
+  extends Model<
+    EcommerceOrderHeaderAttributes,
+    EcommerceOrderHeaderCreationAttributes
+  >
+  implements EcommerceOrderHeaderAttributes
 {
   id!: number;
   orderId!: string | null;
-  customerId!: string | null;
+  customerOrderId!: string | null;
   date!: Date | null;
-  sku!: string | null;
-  quantity!: number | null;
   city!: string | null;
   state!: string | null;
   country!: string | null;
   zipCode!: string | null;
-  fulfillment!: string | null;
+  totalQuantity!: number | null;
+  type!: string | null;
+  warehouse!: string | null;
   recordCreationDate!: Date;
   recordUpdatedDate!: Date;
 }
 
-export default (sequelize: Sequelize): typeof ECommerce => {
-  ECommerce.init(
+export default (sequelize: Sequelize): typeof EcommerceOrderHeader => {
+  EcommerceOrderHeader.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -59,18 +63,12 @@ export default (sequelize: Sequelize): typeof ECommerce => {
         field: 'order_id',
         type: DataTypes.STRING,
       },
-      customerId: {
-        field: 'customer_id',
+      customerOrderId: {
+        field: 'customer_order_id',
         type: DataTypes.STRING,
       },
       date: {
         type: DataTypes.DATE,
-      },
-      sku: {
-        type: DataTypes.STRING,
-      },
-      quantity: {
-        type: DataTypes.DECIMAL,
       },
       city: {
         type: DataTypes.STRING,
@@ -85,7 +83,14 @@ export default (sequelize: Sequelize): typeof ECommerce => {
         field: 'zip_code',
         type: DataTypes.STRING(25),
       },
-      fulfillment: {
+      totalQuantity: {
+        field: 'total_qty',
+        type: DataTypes.DECIMAL,
+      },
+      type: {
+        type: DataTypes.STRING,
+      },
+      warehouse: {
         type: DataTypes.STRING,
       },
       recordCreationDate: {
@@ -102,12 +107,12 @@ export default (sequelize: Sequelize): typeof ECommerce => {
       },
     },
     {
-      modelName: 'ECommerce',
-      tableName: 'ecommerce',
+      modelName: 'EcommerceOrderHeader',
+      tableName: 'ecommerce_order_headers',
       sequelize,
       createdAt: RECORD_CREATION_DATE_FIELD,
       updatedAt: RECORD_UPDATED_DATE_FIELD,
     }
   );
-  return ECommerce;
+  return EcommerceOrderHeader;
 };
